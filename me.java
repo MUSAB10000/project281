@@ -16,30 +16,36 @@ public class me {
 
         System.out.println("Enter the value for p: ");
         int p = scanner.nextInt();
+        if (a % p != 0) {
+            int d = (b * b - 4 * a * c) % p;
+            int y = (4 * a + b);
+            int[] solutions = new int[2];
 
-        int d = (b * b - 4 * a * c) % p;
-        if (d < 0) {
-            d += p;
-        }
+            if (d % p == 0) {
+                System.out.println("y=0");
+            } else {
+                if (modularExponentiation(d, (p - 1) / 2, p) != 1) {
+                    System.out.println("NO SOLUTION");
+                } else {
+                    solutions[0] = (int) ((-b + convertToPerfectSquare(d, p))/*
+                                                                              * can do more simple by using Math.squr(d)
+                                                                              */ * modInverse(2 * a, p)) % p;
+                    solutions[1] = (int) ((-b - convertToPerfectSquare(d, p))/*
+                                                                              * can do more simple by using Math.squr(d)
+                                                                              */ * modInverse(2 * a, p)) % p;
 
-        int[] solutions = new int[2];
+                    if (solutions[0] < 0) {
+                        solutions[0] += p;
+                    }
+                    if (solutions[1] < 0) {
+                        solutions[1] += p;
+                    }
 
-        if (modularExponentiation(d, (p - 1) / 2, p) != 1) {
-            System.out.println("NO SOLUTION");
-        } else {
-            solutions[0] = (int) ((-b + Math.sqrt(d)) * modInverse(2 * a, p)) % p;
-            solutions[1] = (int) ((-b - Math.sqrt(d)) * modInverse(2 * a, p)) % p;
-
-            if (solutions[0] < 0) {
-                solutions[0] += p;
+                    System.out.println("Solutions:");
+                    System.out.print("x { " + solutions[0] + ",");
+                    System.out.println(solutions[1] + "}");
+                }
             }
-            if (solutions[1] < 0) {
-                solutions[1] += p;
-            }
-
-            System.out.println("Solutions:");
-            System.out.print("x { " + solutions[0] + ",");
-            System.out.println(solutions[1] + "}");
         }
     }
 
@@ -53,27 +59,30 @@ public class me {
         return 1;
     }
 
-    private static int modularExponentiation(int base, int exponent, int mod) {
-        int result = 1;
+    private static int modularExponentiation(int base, int power, int mod) {
+        if (mod == 1) {
+            return 0;
+        }
+
+        long result = 1;
         base = base % mod;
-        while (exponent > 0) {
-            if (exponent % 2 == 1) {
+        while (power > 0) {
+            if (power % 2 == 1) {
                 result = (result * base) % mod;
             }
-            exponent >>= 1;
+            power = power / 2;
             base = (base * base) % mod;
         }
-        return result;
+        return (int) result;
     }
 
-    private static int findYValue(int d, int p) {
-        int y = 1;
-        while (true) {
-            int temp = (y * y) % p;
+    private static int convertToPerfectSquare(int d, int p) {
+        for (int x = 0; x < p; x++) {
+            int temp = (x * x) % p;
             if (temp == d) {
-                return y;
+                return x;
             }
-            y++;
         }
+        return -1;
     }
 }
