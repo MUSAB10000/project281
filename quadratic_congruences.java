@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class me {
+public class quadratic_congruences {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -24,15 +24,11 @@ public class me {
             if (d % p == 0) {
                 System.out.println("y=0");
             } else {
-                if (modularExponentiation(d, (p - 1) / 2, p) != 1) {
+                if (Fermats_Little(d, (p - 1) / 2, p) != 1) {
                     System.out.println("NO SOLUTION");
                 } else {
-                    solutions[0] = (int) ((-b + convertToPerfectSquare(d, p))/*
-                                                                              * can do more simple by using Math.squr(d)
-                                                                              */ * modInverse(2 * a, p)) % p;
-                    solutions[1] = (int) ((-b - convertToPerfectSquare(d, p))/*
-                                                                              * can do more simple by using Math.squr(d)
-                                                                              */ * modInverse(2 * a, p)) % p;
+                    solutions[0] = (int) ((-b + convertToPerfectSquare(d, p)) * modInverse(2 * a, p)) % p;
+                    solutions[1] = (int) ((-b - convertToPerfectSquare(d, p)) * modInverse(2 * a, p)) % p;
 
                     if (solutions[0] < 0) {
                         solutions[0] += p;
@@ -59,7 +55,7 @@ public class me {
         return 1;
     }
 
-    private static int modularExponentiation(int base, int power, int mod) {
+    private static int Fermats_Little(int base, int power, int mod) {
         if (mod == 1) {
             return 0;
         }
